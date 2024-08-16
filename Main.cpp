@@ -47,12 +47,13 @@ void mergeSort(int* arr, int left, int right) {
     if (left >= right)
         return;
 
-    int middle = (left + right - 1) / 2;
+    int middle = left + (right - left) / 2;
 
     if (make_thread && (active_thread_count < thread_count) && (right - left > 10000)) {
         active_thread_count++;
         future<void> f = async(launch::async, [&]() {
             mergeSort(arr, left, middle);
+            active_thread_count--;
         });
         mergeSort(arr, middle + 1, right);
         merge(arr, left, middle, right);
